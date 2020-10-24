@@ -16,9 +16,9 @@ private:
     int leftMoney;
 
 public:
-    void ShowAccInfo();
-    int GetAccID();
-    int GetLeftMoney();
+    void ShowAccInfo() const;
+    int GetAccID() const;
+    int GetLeftMoney() const;
     void Deposit(int money);
     int Withdraw(int money);
 };

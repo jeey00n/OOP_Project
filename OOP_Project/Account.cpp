@@ -21,17 +21,17 @@ Account::Account(const Account& copy)
 	strcpy_s(custName, sizeof(custName), copy.custName);
 }
 
-void Account::ShowAccInfo() {
+void Account::ShowAccInfo() const{
 	cout << "°èÁÂ¹øÈ£: " << accountID << endl;
 	cout << "°í°´¸í: " << custName << endl;
 	cout << "ÀÜ¾×: " << leftMoney << endl;
 }
 
-int Account::GetAccID() {
+int Account::GetAccID() const{
 	return accountID;
 }
 
-int Account::GetLeftMoney() {
+int Account::GetLeftMoney() const{
 	return leftMoney;
 }
 
