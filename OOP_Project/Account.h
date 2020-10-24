@@ -8,6 +8,8 @@ public:
     Account(int _accountID, char* _custName, int _leftMoney);
     ~Account();
 
+    Account(const Account& copy);
+
 private:
     int accountID;
     char* custName;

@@ -14,6 +14,13 @@ Account::~Account() {
 	delete []custName;
 }
 
+Account::Account(const Account& copy)
+	: accountID(copy.accountID), leftMoney(copy.leftMoney)
+{
+	custName = new char[strlen(copy.custName) + 1];
+	strcpy_s(custName, sizeof(custName), copy.custName);
+}
+
 void Account::ShowAccInfo() {
 	cout << "°èÁÂ¹øÈ£: " << accountID << endl;
 	cout << "°í°´¸í: " << custName << endl;
