@@ -23,3 +23,17 @@ public:
     int Withdraw(int money);
 };
 
+class AccountHandler {
+private:
+    Account* accArr[100];       //Account 저장을 위한 배열
+    int accCount = 0;           //저장된 account의 수
+public:
+    AccountHandler();
+    ~AccountHandler();
+
+    void _ShowMenu();
+    void _MakeAccount();
+    void _Deposit();
+    void _Withdraw();
+    void _SearchCust();
+};
