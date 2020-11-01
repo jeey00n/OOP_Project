@@ -10,16 +10,16 @@ public:
 
     Account(const Account& copy);
 
-private:
+protected:
     int accountID;
     char* custName;
     int leftMoney;
 
 public:
-    void ShowAccInfo() const;
+    virtual void ShowAccInfo() const;
     int GetAccID() const;
     int GetLeftMoney() const;
-    void Deposit(int money);
+    virtual void Deposit(int money);
     int Withdraw(int money);
 };
 
@@ -36,4 +36,28 @@ public:
     void _Deposit();
     void _Withdraw();
     void _SearchCust();
+};
+
+class NormalAccount :public Account {
+    //보통예금계좌 - 최소한의 이자, 자율 입출금
+private:
+    double rate;
+
+public:
+    NormalAccount(int _accountID, char* _custName, int _leftMoney, double _rate);
+    ~NormalAccount();
+    void ShowAccInfo() const override;
+    void Deposit(int money) override;
+};
+
+class HighCreditAccount :public Account {
+    //신용도 높은 고객에게만 개설허용 - 높은 이율의 계좌
+private:
+    double rate;
+    int classRate;  //1toA, 2toB, 3toC
+public:
+    HighCreditAccount(int _accountID, char* _custName, int _leftMoney, double _rate, int _classRate);
+    ~HighCreditAccount();
+    void ShowAccInfo() const override;
+    void Deposit(int money) override;
 };

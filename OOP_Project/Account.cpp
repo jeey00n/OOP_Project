@@ -22,9 +22,7 @@ Account::Account(const Account& copy)
 }
 
 void Account::ShowAccInfo() const{
-	cout << "계좌번호: " << accountID << endl;
-	cout << "고객명: " << custName << endl;
-	cout << "잔액: " << leftMoney << endl;
+
 }
 
 int Account::GetAccID() const{
@@ -36,7 +34,6 @@ int Account::GetLeftMoney() const{
 }
 
 void Account::Deposit(int money) {
-	leftMoney += money;
 }
 
 int Account::Withdraw(int money) {
@@ -66,26 +63,113 @@ void AccountHandler::_ShowMenu(){
 	cout << "선택 :";
 }
 void AccountHandler::_MakeAccount(){
-	cout << "[계좌개설]" << endl;
-	int randAccID;
-	while (1) {
-		bool flag = true;
-		randAccID = rand() % 1000;
-		for (int i = 0; i < accCount; i++) {
-			if (accArr[i]->GetAccID() == randAccID) {
-				flag = false;
+	while (true) {
+		int accChoice;
+
+		cout << "[계좌 종류 선택]" << endl;
+		cout << "1. 보통예금계좌 2. 신용신뢰계좌" << endl;
+		cout << "선택: ";
+		cin >> accChoice;
+
+		if (accChoice == 1) {
+			cout << "[보통예금계좌 개설]" << endl;
+			int randAccID;
+			while (1) {
+				bool flag = true;
+				randAccID = rand() % 1000;
+				for (int i = 0; i < accCount; i++) {
+					if (accArr[i]->GetAccID() == randAccID) {
+						flag = false;
+					}
+				}
+				if (flag == true) break;
 			}
+			cout << "고객명을 입력하세요: ";
+			char name[100];
+			cin >> name;
+
+			int money;
+			while (true) {
+				cout << "입금액을 입력하세요: ";
+				cin >> money;
+				if (money < 0)
+					cout << "0 이상의 숫자를 입력해 주세요." << endl;
+				else break;
+			}
+
+			double rate;
+			while (true) {
+				cout << "이자율: ";
+				cin >> rate;
+				if (rate < 0)
+					cout << "0 이상의 숫자를 입력해 주세요." << endl;
+				else break;
+			}
+
+			accArr[accCount] = new NormalAccount(randAccID, name, money, rate);
+
+			cout << "계좌가 개설되었습니다.\n\n----------계좌 정보----------" << endl;
+			accArr[accCount]->ShowAccInfo();
+			accCount++;
+			return;
 		}
-		if (flag == true) break;
+		else if (accChoice == 2) {
+			cout << "[신용신뢰계좌 개설]" << endl;
+			int randAccID;
+			while (1) {
+				bool flag = true;
+				randAccID = rand() % 1000;
+				for (int i = 0; i < accCount; i++) {
+					if (accArr[i]->GetAccID() == randAccID) {
+						flag = false;
+					}
+				}
+				if (flag == true) break;
+			}
+			cout << "고객명을 입력하세요: ";
+			char name[100];
+			cin >> name;
+
+			int money;
+			while (true) {
+				cout << "입금액을 입력하세요: ";
+				cin >> money;
+				if (money < 0)
+					cout << "0 이상의 숫자를 입력해 주세요." << endl;
+				else break;
+			}
+
+			double rate;
+			while (true) {
+				cout << "이자율: ";
+				cin >> rate;
+				if (rate < 0)
+					cout << "0 이상의 숫자를 입력해 주세요." << endl;
+				else break;
+			}
+
+			int classRate;
+			while (true) {
+				cout << "신용등급(1toA, 2toB, 3toC): ";
+				cin >> classRate;
+				if (((classRate == 1)||(classRate == 2))||(classRate==3))
+					break;
+				else
+					cout<< "알맞은 숫자를 입력해 주세요." <<endl;
+			}
+
+			accArr[accCount] = new HighCreditAccount(randAccID, name, money, rate, classRate);
+			cout << "계좌가 개설되었습니다."<< endl;
+			accArr[accCount]->ShowAccInfo();
+			accCount++;
+			return;
+		}
+		else {
+			cout << "잘못된 입력입니다." << endl;
+			cout << "계좌 계설을 종료합니다." << endl;
+			return;
+		}
 	}
-	cout << "고객명을 입력하세요: ";
-	char name[100];
-	cin >> name;
-	accArr[accCount] = new Account(randAccID, name, 0);
-	cout << "계좌가 개설되었습니다.\n\n----------계좌 정보----------" << endl;
-	accArr[accCount]->ShowAccInfo();
-	accCount++;
-	return;
 }
 void AccountHandler::_Deposit(){
 	if (accCount == 0) {
@@ -166,4 +250,58 @@ void AccountHandler::_SearchCust(){
 		}
 	}
 	cout << "계좌번호와 일치하는 고객님이 없습니다." << endl;
+}
+
+NormalAccount::NormalAccount(int _accountID, char* _custName, int _leftMoney, double _rate)
+	:Account(_accountID, _custName, _leftMoney), rate(_rate)
+{}
+NormalAccount::~NormalAccount() {}
+
+void NormalAccount::ShowAccInfo() const{
+	cout << "----------계좌 정보----------" << endl;
+	cout << "계좌번호: " << accountID << endl;
+	cout << "고객명: " << custName << endl;
+	cout << "잔액: " << leftMoney << endl;
+	cout << "이자율: " << rate << endl;
+}
+
+void NormalAccount::Deposit(int money) {
+	leftMoney += money;
+	leftMoney = (int)leftMoney * ((rate + 100) / 100);
+}
+
+HighCreditAccount::HighCreditAccount(int _accountID, char* _custName, int _leftMoney, double _rate, int _classRate)
+: Account(_accountID, _custName, _leftMoney), rate(_rate), classRate(_classRate)
+{}
+HighCreditAccount::~HighCreditAccount() {}
+
+void HighCreditAccount::ShowAccInfo() const{
+	cout << "----------계좌 정보----------" << endl;
+	cout << "계좌번호: " << accountID << endl;
+	cout << "고객명: " << custName << endl;
+	cout << "잔액: " << leftMoney << endl;
+	cout << "신용등급: ";
+	if (classRate == 1)
+		cout << 'A' << endl;
+	else if (classRate == 2)
+		cout << 'B' << endl;
+	else if (classRate == 3)
+		cout << 'C' << endl;
+	cout << "이자율: ";
+	if (classRate == 1)
+		cout << rate + 7 << '%' << endl;
+	else if (classRate == 2)
+		cout << rate + 4 << '%' << endl;
+	else if (classRate == 3)
+		cout << rate + 2 << '%' << endl;
+}
+
+void HighCreditAccount::Deposit(int money) {
+	leftMoney += money;
+	if (classRate == 1)
+		leftMoney = (int)leftMoney * (((rate + 7) + 100) / 100);
+	else if (classRate == 2)
+		leftMoney = (int)leftMoney * (((rate + 4) + 100) / 100);
+	else if (classRate == 3)
+		leftMoney = (int)leftMoney * (((rate + 2) + 100) / 100);
 }
